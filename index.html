@@ -67,44 +67,6 @@ volume
   <input id='toggleButton' type='button' value='Play' onclick='toggle();' />
 </div>
 
-<p class="bbFooter">General Presets</p>
-<div>
-  <input type='button' value='Focus' onclick='preset(263,14);' />
-  <input type='button' value='Creativity' onclick='preset(180,10.6);' />
-  <input type='button' value='Relaxation' onclick='preset(136.1,6);' />
-  <input type='button' value='Sleep' onclick='preset(141.27,3.4);' />
-  <input type='button' value='Chanting' onclick='preset(432,4.5);' />
-  <input type='button' value='Intuition' onclick='preset(211.44,5.5);' />
-  <input type='button' value='Astral Travel' onclick='preset(140,6.3);' />
-  <input type='button' value='Healing' onclick='preset(150,8.0);' />
-  <input type='button' value='Alpha' onclick='preset(306.9,9.3);' />
-  <input type='button' value='Intelligence' onclick='preset(492,13.0);' />
-  <input type='button' value='Euphoria' onclick='preset(210.42,20);' />
-</div>
-<p class="bbFooter">Chakra Presets</p>
-Tuning Fork
-<div>
-  <input type='button' value='Crown' onclick='preset(172.06,15);' />
-  <input type='button' value='3rd Eye' onclick='preset(221.23,13);' />
-  <input type='button' value='Throat' onclick='preset(141.27,12);' />
-  <input type='button' value='Heart' onclick='preset(136.10,6.15);' />
-  <input type='button' value='Solar Plexus' onclick='preset(126.22,10);' />
-  <input type='button' value='Navel' onclick='preset(210.42,9);' />
-  <input type='button' value='Root' onclick='preset(194.18,7.83);' />
-</div>
-Solfeggio
-<div>
-  <input type='button' value='Crown' onclick='preset(963,15);' />
-  <input type='button' value='3rd Eye' onclick='preset(852,13);' />
-  <input type='button' value='Throat' onclick='preset(741,12);' />
-  <input type='button' value='Heart' onclick='preset(639,6.15);' />
-  <input type='button' value='Solar Plexus' onclick='preset(528,10);' />
-  <input type='button' value='Navel' onclick='preset(417,9);' />
-  <input type='button' value='Root' onclick='preset(396,7.83);' />
-</div>
-
-<p class="bbFooter">Enjoy!</p>
-
 </div>
 
 <script>
@@ -193,12 +155,6 @@ var toggle = function() {
   } else {
     stop();
   }
-};
-
-var preset = function(carrier,beat) {
-  document.getElementById("cOut").value = carrier;
-  document.getElementById("bOut").value = beat;
-  inputText();
 };
 
 window.onload = function() {
