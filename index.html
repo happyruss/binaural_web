@@ -1,0 +1,210 @@
+<html>
+<head>
+<style>
+.center-content {
+  text-align: center;
+  background-color: #ffffff;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.header-content {
+  text-align: center;
+}
+p.bbHeading {
+  font-size: x-large;
+  font-color: #000000;
+}
+p.bbFooter {
+  font-size: large;
+  font-color: #000000;
+}
+
+
+</style>
+</head>
+<body>
+<div class="header-content">
+  <div>
+    <a href="/binaural.html" target="_blank">Visit the Binaural Page to learn about Binaural Beats</a>
+  </div>
+  <div>
+    Use the controls below to create your own binaural beats
+  </div>
+  <div>
+    ** Headphones are required to experience binaural beats **
+  </div>
+  <div>
+    ** Web-Audio enabled browser (such as Chrome or Firefox) required **
+  </div>
+</div>
+
+<div class="center-content">
+<p class="bbHeading">Binaural Beats Web App</p>
+<div>
+Carrier Frequency
+<input type="range" value="100" id="cIn" min="20" max="1200" oninput="show()" />
+<input type="text" size="5" maxlength="4" value="100" id="cOut" oninput="inputText()" />Hz
+</div>
+
+<div>
+Beat Frequency
+<input type="range" value="800" id="bIn" min="1" max="4000" oninput="show()" />
+<input type="text" size="5" maxlength="2" value="8" id="bOut" oninput="inputText()" />Hz
+</div>
+
+<div>
+Left: <span id="fOutL"></span> --
+Right: <span id="fOutR"></span>
+</div>
+
+<div>
+volume
+<input type="range" id="vIn" min="0" max="100" oninput="show()" />
+<span id="vOut"></span><br>
+</div>
+
+<div>
+  <input id='toggleButton' type='button' value='Play' onclick='toggle();' />
+</div>
+
+<p class="bbFooter">General Presets</p>
+<div>
+  <input type='button' value='Focus' onclick='preset(263,14);' />
+  <input type='button' value='Creativity' onclick='preset(180,10.6);' />
+  <input type='button' value='Relaxation' onclick='preset(136.1,6);' />
+  <input type='button' value='Sleep' onclick='preset(141.27,3.4);' />
+  <input type='button' value='Chanting' onclick='preset(432,4.5);' />
+  <input type='button' value='Intuition' onclick='preset(211.44,5.5);' />
+  <input type='button' value='Astral Travel' onclick='preset(140,6.3);' />
+  <input type='button' value='Healing' onclick='preset(150,8.0);' />
+  <input type='button' value='Alpha' onclick='preset(306.9,9.3);' />
+  <input type='button' value='Intelligence' onclick='preset(492,13.0);' />
+  <input type='button' value='Euphoria' onclick='preset(210.42,20);' />
+</div>
+<p class="bbFooter">Chakra Presets</p>
+Tuning Fork
+<div>
+  <input type='button' value='Crown' onclick='preset(172.06,15);' />
+  <input type='button' value='3rd Eye' onclick='preset(221.23,13);' />
+  <input type='button' value='Throat' onclick='preset(141.27,12);' />
+  <input type='button' value='Heart' onclick='preset(136.10,6.15);' />
+  <input type='button' value='Solar Plexus' onclick='preset(126.22,10);' />
+  <input type='button' value='Navel' onclick='preset(210.42,9);' />
+  <input type='button' value='Root' onclick='preset(194.18,7.83);' />
+</div>
+Solfeggio
+<div>
+  <input type='button' value='Crown' onclick='preset(963,15);' />
+  <input type='button' value='3rd Eye' onclick='preset(852,13);' />
+  <input type='button' value='Throat' onclick='preset(741,12);' />
+  <input type='button' value='Heart' onclick='preset(639,6.15);' />
+  <input type='button' value='Solar Plexus' onclick='preset(528,10);' />
+  <input type='button' value='Navel' onclick='preset(417,9);' />
+  <input type='button' value='Root' onclick='preset(396,7.83);' />
+</div>
+
+<p class="bbFooter">Enjoy!</p>
+
+</div>
+
+<script>
+var audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+var lFreq, rFreq;
+var oscillatorL, oscillatorR;
+
+var beep = function() {
+  document.getElementById("toggleButton").value = 'Stop';
+
+  oscillatorL = audioCtx.createOscillator();
+  oscillatorR = audioCtx.createOscillator();
+
+  oscillatorL.frequency.value = lFreq;
+  oscillatorR.frequency.value = rFreq;
+
+  oscillatorL.type = 'sine';
+  oscillatorR.type = 'sine';
+
+  var gainNodeL = audioCtx.createGain();
+  var gainNodeR = audioCtx.createGain();
+
+  gainNodeL.gain.value = volume;
+  gainNodeR.gain.value = volume;
+
+  var StereoPannerOptionsL = {
+    pan : -1.0
+  };
+  var StereoPannerOptionsR = {
+    pan : 1.0
+  };
+
+  var panNodeL = audioCtx.createStereoPanner();
+  panNodeL.pan.value = -1.0;
+  var panNodeR = audioCtx.createStereoPanner();
+  panNodeR.pan.value = 1.0;
+
+  oscillatorL.connect(gainNodeL);
+  oscillatorR.connect(gainNodeR);
+
+  gainNodeL.connect(panNodeL);
+  gainNodeR.connect(panNodeR);
+
+  panNodeL.connect(audioCtx.destination);
+  panNodeR.connect(audioCtx.destination);
+
+  oscillatorL.start();
+  oscillatorR.start();
+
+};
+
+var stop = function() {
+  document.getElementById("toggleButton").value = 'Play';
+  if (oscillatorL) {
+    oscillatorL.stop();
+    oscillatorR.stop();
+  }
+};
+
+var show = function() {
+  stop();
+  var carrierFrequency = Number(document.getElementById("cIn").value);
+  var beatFrequency = Number(document.getElementById("bIn").value / 100);
+  lFreq = carrierFrequency - (beatFrequency / 2);
+  rFreq = carrierFrequency + (beatFrequency / 2);
+
+  document.getElementById("cOut").value = carrierFrequency;
+  document.getElementById("bOut").value = beatFrequency;
+  document.getElementById("fOutL").innerHTML = lFreq + ' Hz';
+  document.getElementById("fOutR").innerHTML = rFreq + ' Hz';
+
+  volume = document.getElementById("vIn").value / 100;
+  document.getElementById("vOut").innerHTML = volume;
+};
+
+var inputText = function() {
+  document.getElementById("cIn").value = Number(document.getElementById("cOut").value);
+  document.getElementById("bIn").value = Number(document.getElementById("bOut").value) * 100;
+  show();
+};
+
+var toggle = function() {
+  var currentValue = document.getElementById("toggleButton").value;
+  if (currentValue == 'Play') {
+    beep();
+  } else {
+    stop();
+  }
+};
+
+var preset = function(carrier,beat) {
+  document.getElementById("cOut").value = carrier;
+  document.getElementById("bOut").value = beat;
+  inputText();
+};
+
+window.onload = function() {
+  show();
+};
+
+</script>
+</body>
+</html>
